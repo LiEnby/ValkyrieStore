@@ -1,0 +1,26 @@
+{
+
+  "description": "Brings back the old \"Valkyrie\" Playstation Store!\n\nGoto https://store.playstation.com/en-us/home/games to view",
+  "manifest_version": 2,
+  "name": "Valkyrie!",
+  "version": "1.0",
+  "homepage_url": "https://store.playstation.com/en-us/home/games",
+  "icons": {
+    "48": "silica.png"
+  },
+
+  "permissions": [
+    "webRequest", "webRequestBlocking", "https://store.playstation.com/*", "https://web.archive.org/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "strict_min_version": "57.0a1"
+    }
+  }
+
+}
