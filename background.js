@@ -1,17 +1,36 @@
 function beforeRequest(details) {
   console.log('[Valkyrie] STORE Request made to: '+details.url);
-	  
   var region = details.url.split("/")[3];
+  if(region == undefined)
+	  return {};
   console.log('[Valkyrie] Region: '+region);
   if(details.url == "https://store.playstation.com/"+region+"/home/games")
   {
-	var getNewUrl = "https://web.archive.org/web/20200919id_/https://store.playstation.com/"+region+"/home/games";
-	console.log('[Valkyrie] replaceing with : '+getNewUrl);
+	
+	var date = 20200919;
+	console.log('[Valkyrie] replacing response ...');
+	for(var i = 0; i < 20; i++)
+	{
+		var getNewUrl = "https://web.archive.org/web/"+(date+i).toString()+"id_/https://store.playstation.com/"+region+"/home/games";
+		
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", getNewUrl, false);
+		xhr.send();
 
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", getNewUrl, false);
-	xhr.send();
-
+		// make sure date fetched is acturally after the date i specified..
+		// (why do i even have to do this?)
+		var newDate = Number(xhr.responseURL.split("/")[4].split("id_")[0].substring(0,8));
+		console.log("[Valkyrie] newDate: "+newDate.toString());
+		if(newDate < date)
+		{
+			console.log("[Valkyrie] Nope, retrying w a later date");
+			continue;
+		}
+		else
+		{
+			break;
+		}
+	}
 	var response = xhr.responseText;	
 	var filter = browser.webRequest.filterResponseData(details.requestId);
 	var encoder = new TextEncoder();
@@ -31,7 +50,8 @@ function beforeHeaders(e) {
   console.log('[Valkyrie] HEADERS recieved for: '+e.url);
 
   var region = e.url.split("/")[3];
-
+  if(region == undefined)
+	  return {};
   if(e.url == "https://store.playstation.com/"+region+"/home/games")
   {
 	  console.log("[Valkyrie] Faking success.");
@@ -57,7 +77,7 @@ function beforeHeaders(e) {
   }
   
   return {responseHeaders: e.responseHeaders, 
-  statusCode: e.statusCode = 200};
+  statusCode: e.statusCode};
 }
 
 browser.webRequest.onHeadersReceived.addListener(
