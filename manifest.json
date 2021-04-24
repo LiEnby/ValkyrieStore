@@ -12,7 +12,9 @@
   "permissions": [
     "webRequest", "webRequestBlocking", "https://store.playstation.com/*"
   ],
-
+  "web_accessible_resources": [
+	"oldStore.html"
+  ],
   "background": {
     "scripts": ["background.js"]
   },
