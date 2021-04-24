@@ -1,13 +1,26 @@
 
 function beforeRequest(details) {
   var forceValkyrie = details.url.search("smcid=psapp") != -1;
-	
+
+  if(!forceValkyrie)
+	forceValkyrie = (localStorage["force-valkrie"] == "true")
+
   console.log('[Valkyrie] STORE Request made to: '+details.url);
   var region = details.url.split("/")[3];
+  
   if(region == undefined && !forceValkyrie)
 	  return {};
+  
+  if(region != undefined) 
+	  if(region.match(/[a-z]{2}-[a-z]{2}$/g) == null) // exclude /assets/ and everything else
+		  return {};
+		  
   console.log('[Valkyrie] Region: '+region);
   var url = browser.runtime.getURL("oldStore.html");
+  
+  if(localStorage["use-wayback"] == "true")
+	  url = "https://web.archive.org/web/20200919id_/https://store.playstation.com/en-us/home/games";
+  
   console.log('[Valkyrie] oldStore HTML Location: '+url);
   
   var xhr = new XMLHttpRequest();
@@ -36,11 +49,19 @@ function beforeRequest(details) {
 
 function beforeHeaders(e) {
   var forceValkyrie = e.url.search("smcid=psapp") != -1;
+  if(!forceValkyrie)
+	forceValkyrie = (localStorage["force-valkrie"] == "true")
+
   console.log('[Valkyrie] HEADERS recieved for: '+e.url);
 
   var region = e.url.split("/")[3];
-  if(region == undefined && !forceValkyrie)
+  if(region == undefined  && (region.match(/[a-z]{2}-[a-z]{2}$/g) == null) && !forceValkyrie)
 	  return {};
+  
+  if(region != undefined) 
+	  if(region.match(/[a-z]{2}-[a-z]{2}$/g) == null) // exclude /assets/ and everything else
+		  return {};
+  
   if(forceValkyrie || 
   e.url.startsWith("https://store.playstation.com/"+region+"/home") || 
   e.url.startsWith("https://store.playstation.com/"+region+"/download") ||
