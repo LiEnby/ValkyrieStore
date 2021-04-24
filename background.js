@@ -2,12 +2,14 @@ var universalLoader = atob("CjwhRE9DVFlQRSBodG1sPgo8aHRtbCBkaXI9Imx0ciI+CiAgPGhl
 // https://web.archive.org/web/20200919140017id_/https://store.playstation.com/en-us/home/games with main div changed
 
 function beforeRequest(details) {
+  var forceValkyrie = details.url.search("smcid=psapp") != -1;
+	
   console.log('[Valkyrie] STORE Request made to: '+details.url);
   var region = details.url.split("/")[3];
-  if(region == undefined)
+  if(region == undefined && !forceValkyrie)
 	  return {};
   console.log('[Valkyrie] Region: '+region);
-  if(details.url == "https://store.playstation.com/"+region+"/home/games" || details.url == "https://store.playstation.com/"+region+"/home/latest" || details.url == "https://store.playstation.com/"+region+"/download/list")
+  if(forceValkyrie || details.url == "https://store.playstation.com/"+region+"/home/games" || details.url == "https://store.playstation.com/"+region+"/home/latest" || details.url == "https://store.playstation.com/"+region+"/download/list")
   {
 	
 	var filter = browser.webRequest.filterResponseData(details.requestId);
@@ -25,12 +27,13 @@ function beforeRequest(details) {
 }
 
 function beforeHeaders(e) {
+  var forceValkyrie = e.url.search("smcid=psapp") != -1;
   console.log('[Valkyrie] HEADERS recieved for: '+e.url);
 
   var region = e.url.split("/")[3];
-  if(region == undefined)
+  if(region == undefined && !forceValkyrie)
 	  return {};
-  if(e.url == "https://store.playstation.com/"+region+"/home/games" || e.url == "https://store.playstation.com/"+region+"/home/latest" || e.url == "https://store.playstation.com/"+region+"/download/list")
+  if(forceValkyrie || e.url == "https://store.playstation.com/"+region+"/home/games" || e.url == "https://store.playstation.com/"+region+"/home/latest" || e.url == "https://store.playstation.com/"+region+"/download/list")
   {
 	  console.log("[Valkyrie] Faking success.");
 	  e.responseHeaders = [

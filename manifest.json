@@ -3,7 +3,7 @@
   "description": "Brings back the old \"Valkyrie\" Playstation Store!\n\nGoto https://store.playstation.com/en-us/home/games to access the old store",
   "manifest_version": 2,
   "name": "Valkyrie!",
-  "version": "1.2",
+  "version": "1.3",
   "homepage_url": "https://github.com/KuromeSan/ValkyrieStore",
   "icons": {
     "48": "silica.png"
