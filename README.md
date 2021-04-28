@@ -1,9 +1,8 @@
 # ValkyrieStore
 Firefox extension to allow the old "Valkyrie" playstation store to be loaded and used-
 
-
 PSST- Sony, maybe make your new store not suck rather than removing the better one?
-
+Welp it got patched by sony. so i guess not then ^^
 
 == Build ==
 1) download src
